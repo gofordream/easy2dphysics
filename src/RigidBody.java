@@ -29,4 +29,12 @@ public class RigidBody{
 		angularVelocity.y=y;
 		angularVelocity.z=z;
 	}
+	public void update(double dt){
+		position=Game.vecplus(position,Game.vecdotd(velocity, dt));
+		rotation+=angularVelocity.magnitude()*dt;	
+	}
+	public void back(double dt){
+		position=Game.vecminus(position,Game.vecdotd(velocity, dt));
+		rotation-=angularVelocity.magnitude()*dt;	
+	}
 }
