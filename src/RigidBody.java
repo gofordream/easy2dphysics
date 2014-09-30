@@ -1,4 +1,8 @@
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 public class RigidBody{
+	//default as a circle
 	public Vector position;
 	public Vector velocity;
 	public Vector angularVelocity;
@@ -31,10 +35,18 @@ public class RigidBody{
 	}
 	public void update(double dt){
 		position=Game.vecplus(position,Game.vecdotd(velocity, dt));
-		rotation+=angularVelocity.magnitude()*dt;	
+		rotation+=angularVelocity.z*dt;//don't replace angularVelocity.z with angularVelocity.magnitude	
 	}
 	public void back(double dt){
 		position=Game.vecminus(position,Game.vecdotd(velocity, dt));
 		rotation-=angularVelocity.magnitude()*dt;	
+	}
+	public void draw(Graphics2D g2){
+		g2.setColor(Color.WHITE);
+		g2.fillOval((int)(position.x-r),(int)(position.y-r), (int)r*2, (int)r*2);
+		g2.setColor(Color.BLUE);
+		int x=(int)position.x;
+		int y=(int)position.y;
+		g2.drawLine(x, y, (int)(Math.sin(rotation*Math.PI/180)*r+x),(int)(Math.cos(rotation*Math.PI/180)*r+y));
 	}
 }

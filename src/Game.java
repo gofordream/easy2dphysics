@@ -14,12 +14,7 @@ class MyPanel extends JPanel{
 		if(bodies!=null){
 			int i;
 			for(i=0;i<12;i++){
-				g2.setColor(Color.WHITE);
-				g2.fillOval((int)(bodies[i].position.x-bodies[i].r),(int)(bodies[i].position.y-bodies[i].r), (int)bodies[i].r*2, (int)bodies[i].r*2);
-				g2.setColor(Color.BLUE);
-				int x=(int)bodies[i].position.x;
-				int y=(int)bodies[i].position.y;
-				g2.drawLine(x, y, (int)(Math.sin(bodies[i].rotation*Math.PI/180)*bodies[i].r+x),(int)(Math.cos(bodies[i].rotation*Math.PI/180)*bodies[i].r+y));
+				bodies[i].draw(g2);
 			}
 		}
 	}
@@ -49,7 +44,7 @@ public class Game{
 			bodies[i].I=10;
 			bodies[i].rotation=Math.random()*360-180;
 			bodies[i].setangularV(0, 0, 0);
-			bodies[i].setVelocity(Math.random()*12-6, Math.random()*12-6, 0);
+			bodies[i].setVelocity(Math.random()*6-3, Math.random()*6-3, 0);
 		}
 		for(i=0;i<6;i++){
 			bodies[6+i]=new RigidBody();
@@ -59,7 +54,7 @@ public class Game{
 			bodies[6+i].I=10;
 			bodies[6+i].rotation=Math.random()*360-180;
 			bodies[6+i].setangularV(0, 0, 0);
-			bodies[6+i].setVelocity(Math.random()*12-6, Math.random()*12-6, 0);
+			bodies[6+i].setVelocity(Math.random()*6-3, Math.random()*6-3, 0);
 		}
 		
 		myframe=new MyFrame();
@@ -73,9 +68,7 @@ public class Game{
 			double dt=1.0;
 			stepSimulation(dt);
 			myframe.repaint();
-			Thread.sleep(50);
-			//if(bodies[0]!=null)
-				//System.out.println(bodies[0].rotation);
+			Thread.sleep(20);//50fps
 		}
 	}
 	private static void stepSimulation(double dt){
@@ -147,8 +140,7 @@ public class Game{
 		//System.out.println(v1.z);
 		//System.out.println(v2.z);
 		body1.angularVelocity=vecplus(body1.angularVelocity,vecdotd(vecproc(r1,vecplus(vecdotd(n,j),vecdotd(t,-j*u))),1/body1.I));
-		body2.angularVelocity=vecplus(body2.angularVelocity,vecdotd(vecproc(r2,vecplus(vecdotd(n,-j),vecdotd(t,j*u))),1/body2.I));
-		
+		body2.angularVelocity=vecplus(body2.angularVelocity,vecdotd(vecproc(r2,vecplus(vecdotd(n,-j),vecdotd(t,j*u))),1/body2.I));		
 		
 	}
 	private static int checkforcollision(){
@@ -163,11 +155,10 @@ public class Game{
 				double len=r.magnitude()-(body1.r+body2.r);
 				Vector v=vecminus(body1.velocity,body2.velocity);
 				double vn=vecdot(v,r);
-				if(len<=3 && len >=-5 && vn<0){		
+				if(len<=0 && len >=-5 && vn<0){		
 					//considered as collision
 					Contact c=new Contact(body1,body2);
-					contacts[count++]=c;
-					
+					contacts[count++]=c;					
 				}else if(len<-5){
 					//considered as penetrate
 					return -1;

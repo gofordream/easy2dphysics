@@ -4,4 +4,5 @@ public class Contact{
 		body1=b1;
 		body2=b2;
 	}
+	
 }
